@@ -1,32 +1,32 @@
-Pseudocode
- 
-minTrain = 15
-minTest = 5
-U=[]
-Map<uniqueTimestamp, count> timestampsMap
-Map<user, timestampsList[]> ratingsMap
-
-for line in InputFile:
-	user, timestamp = readLine()
-	U.add(user)
-	timestampsMap.put(timestamp,0)
-	ratingsMap.put(user,ratingsMap.get(user).add(timestamp))
-
-for user in U:
-	timestampsList = ratingsMap.get(user)
-	if(timestampList.size() <= minTrain + minTest):
-		U.remove(user)
-	else:
-		timestampsList.sort()
-		timestampsList.removeFromHead(MinTrain)
-		timestampsList.removeFromTail(minTest)
-
-for timestamp in timestampsMap.keySet():
-	count = 0
-	for user in U:
-		timestampsList = ratingsMap.get(user)
-		timestampsList.sort()
-		if (timestamp >= timestampsList.first() && uniqueTimestamp <= timestampsList.last()):
-			count++;
-	timestampsMap.put(timestamp,count)
+Pseudocode<br />
+<br />
+minTrain = 15<br />
+minTest = 5<br />
+U=[]<br />
+Map<uniqueTimestamp, count> timestampsMap<br />
+Map<user, timestampsList[]> ratingsMap<br />
+<br />
+for line in InputFile:<br />
+	user, timestamp = readLine()<br />
+	U.add(user)<br />
+	timestampsMap.put(timestamp,0)<br />
+	ratingsMap.put(user,ratingsMap.get(user).add(timestamp))<br />
+<br />
+for user in U:<br />
+	timestampsList = ratingsMap.get(user)<br />
+	if(timestampList.size() <= minTrain + minTest):<br />
+		U.remove(user)<br />
+	else:<br />
+		timestampsList.sort()<br />
+		timestampsList.removeFromHead(MinTrain)<br />
+		timestampsList.removeFromTail(minTest)<br />
+<br />
+for timestamp in timestampsMap.keySet():<br />
+	count = 0<br />
+	for user in U:<br />
+		timestampsList = ratingsMap.get(user)<br />
+		timestampsList.sort()<br />
+		if (timestamp >= timestampsList.first() && uniqueTimestamp <= timestampsList.last()):<br />
+			count++;<br />
+	timestampsMap.put(timestamp,count)<br />
 bestTimestamp = argmax(timestampsMap)		
