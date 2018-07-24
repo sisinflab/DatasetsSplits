@@ -10,7 +10,7 @@ usage:
  
  -p,--splitPath <arg>      Training and test set folder path
  
- -sp,--splitter <arg>      Name of splitter to deploy
+ -sp,--splitter <arg>      Name of splitter to use
 
 Example:
 
