@@ -1,12 +1,6 @@
 package main;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import splits.TemporalSplitWithConstraints;
 
 
@@ -14,8 +8,7 @@ public class App {
 
 	// Dateset path
 	private static final String DATASETPATH = "datasetPath";;
-	
-	
+
 	//Path 
 	private static final String SPLITPATH = "splitPath";
 	
@@ -27,9 +20,13 @@ public class App {
 	
 	// Minimum number of ratings in the test set
 	private static final String MINTEST  = "minTest";
-	
-	
-	public static void main(String[] args) throws Exception {
+
+	// Separator used in ratings file
+    private static final String SEPARATOR  = "separator";
+
+
+
+    public static void main(String[] args) throws Exception {
 		
         CommandLine cl = getCommandLineOptions(args);
         if (cl == null) {
@@ -37,7 +34,7 @@ public class App {
             return;
         } 
         
-        // Mandatory arguments for each approach
+        // Mandatory arguments
         String datasetPath = cl.getOptionValue(DATASETPATH);
         String splitter = cl.getOptionValue(SPLITTER);
         String path = cl.getOptionValue(SPLITPATH);
@@ -48,7 +45,8 @@ public class App {
         	
         		String minTrainS = cl.getOptionValue(MINTRAIN);
         		String minTestS = cl.getOptionValue(MINTEST);
-        		
+        		String separator = cl.getOptionValue(SEPARATOR);
+
         		int minTrain = 15;
         		int minTest = 5;
         		
@@ -59,8 +57,12 @@ public class App {
         		if(minTestS != null) {
         			minTest = Integer.parseInt(minTestS);
         		}
+
+        		if (separator == null){
+        		    separator = "\t";
+                }
         		
-        		TemporalSplitWithConstraints temporalsplit = new TemporalSplitWithConstraints(minTrain, minTest);
+        		TemporalSplitWithConstraints temporalsplit = new TemporalSplitWithConstraints(minTrain, minTest, separator);
         		temporalsplit.launchTemporalSplitWithConstraints(datasetPath, path);
         		
         		break;
@@ -97,6 +99,11 @@ public class App {
         Option minTest = new Option("mte", MINTEST, true, "Set minimum number of ratings in the test set");
         minTest.setRequired(false);
         options.addOption(minTest);
+
+        // // Separator used in ratings file
+        Option separator = new Option("sep", SEPARATOR, true, "Set the separator for ratings file");
+        separator.setRequired(false);
+        options.addOption(separator);
         
         
 

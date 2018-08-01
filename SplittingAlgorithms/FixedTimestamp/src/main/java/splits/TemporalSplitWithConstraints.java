@@ -1,6 +1,5 @@
 package splits;
 
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,36 +10,34 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import utils.*;
 
 public class TemporalSplitWithConstraints {
 
 	private int minTrain;
 	private int minTest;
-	Map<Integer,ArrayList<Rating>> scores;
+	private String separator;
+	private Map<Integer,ArrayList<Rating>> scores;
 	
-	public TemporalSplitWithConstraints(int minTrain, int minTest) {
+	public TemporalSplitWithConstraints(int minTrain, int minTest, String separator) {
 		this.minTrain = minTrain;
 		this.minTest = minTest;
+		this.separator = separator;
 	}
 	
 	
-	
-	
+
 	public void launchTemporalSplitWithConstraints(String ratingsPath, String destinationPath) throws IOException {
 
-		
 		long bestTimestamp = getBestTimestamp(ratingsPath);
-		
 		split(ratingsPath, destinationPath, bestTimestamp);
-		
-		
+
 	}
-	
+
+
 	private long getBestTimestamp(String ratingsPath) throws IOException {
 		
-		scores = Utils.getScores(ratingsPath);
+		scores = Utils.getScores(ratingsPath,separator);
 		Map<Integer,ArrayList<Long>> users = new HashMap<>();
 		
 		
@@ -72,18 +69,11 @@ public class TemporalSplitWithConstraints {
 				uniqueTimestamps.add(timestamp);
 			}						
 		}
-		
-//		System.out.println(uniqueTimestamps.size()); // debug 
-		
+
 		Map<Long,Integer> checkMap = new HashMap<Long,Integer>();
 		
-		int debug = 1;
-		// For each unique timestamp, counts how many previously filtered user have that timestamp. The timestamp with the highest value of count will be chosen.
+		// For each unique timestamp, count how many previously filtered user have that timestamp. The timestamp with the highest value of count will be chosen.
 		for(Long timestamp:uniqueTimestamps) {
-			
-//			System.out.println(debug);
-//			debug++;
-			
 			int count = 0;
 			usersIt = users.keySet().iterator();
 			while(usersIt.hasNext()) {
@@ -97,20 +87,16 @@ public class TemporalSplitWithConstraints {
 			
 			checkMap.put(timestamp, count);
 		}
-		// mi faccio stampare il timestamp che include il maggior numero di utenti
+
 		Long bestTimestamp = checkMap.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
 		System.out.println("BestTimestamp:" + bestTimestamp);
 		return bestTimestamp;
-		
-
-//		System.out.println(checkMap.get(bestTimestamp));
-		
 	}
 	
 
 	private void split(String ratingsPath,String destinationDir, long referringTimestamp) throws IOException{
 	
-		scores = Utils.getScores(ratingsPath);
+		scores = Utils.getScores(ratingsPath, separator);
 
 		PrintWriter out= new PrintWriter(new FileWriter(destinationDir+"/trainingset.tsv"));
 		PrintWriter out2 = new PrintWriter(new FileWriter(destinationDir+"/testset.tsv"));
@@ -136,14 +122,14 @@ public class TemporalSplitWithConstraints {
 					
 						
 						if(!(train.containsKey(userId))) {
-							train.put(userId, new ArrayList<Rating>());
+							train.put(userId, new ArrayList<>());
 						}
 						train.get(userId).add(new Rating(rating.getTimestamp(),rating.getRating(),rating.getItemID()));
 			
 					}else{
 						
 						if(!(test.containsKey(userId))) {
-							test.put(userId, new ArrayList<Rating>());
+							test.put(userId, new ArrayList<>());
 						}
 						test.get(userId).add(new Rating(rating.getTimestamp(),rating.getRating(),rating.getItemID()));
 					}
@@ -153,15 +139,12 @@ public class TemporalSplitWithConstraints {
 			}
 		}
 		
-		// dalle due mappe trovate vado a togliere tutti quegli utenti che non soddisfano i vincoli delle dimensioni minime.
-		// è necessario fare questo doppio passaggio in quanto prendendo tutti gli utenti come precedentemente fatto non è detto che soddisfi i vincoli
+
+		// print on file all the ratings that satisfies the constraints
 		it = train.keySet().iterator();
 		int count = 0;
 		while(it.hasNext()) {
-		
-			
-			Integer userId = it.next();
-			
+		    Integer userId = it.next();
 			ArrayList<Rating> trainRatings = train.get(userId);
 			ArrayList<Rating> testRatings = test.get(userId);
 			if(trainRatings != null && testRatings != null) {

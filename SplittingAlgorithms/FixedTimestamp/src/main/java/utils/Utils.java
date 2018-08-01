@@ -9,28 +9,24 @@ import java.util.Map;
 
 
 public class Utils {
-	// Parameters: training set path 
-	public static Map<Integer, ArrayList<Rating>> getScores(String file) throws IOException {
-		Map<Integer, ArrayList<Rating>> scores = new HashMap<Integer,ArrayList<Rating>>();
+	public static Map<Integer, ArrayList<Rating>> getScores(String file, String separator) throws IOException {
+		Map<Integer, ArrayList<Rating>> scores = new HashMap<>();
 
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 
 		String line = "";
 		
 		while ((line = reader.readLine()) != null) {
-			String[] splittedLine = line.split("\t");
+			String[] splittedLine = line.split(separator);
 			Integer userId = Integer.valueOf(splittedLine[0]);
 			long itemId =  Long.valueOf(splittedLine[1]);
 			float scoreValue = Float.valueOf(splittedLine[2]);
 			long timestamp = Long.valueOf(splittedLine[3]);
-			
-			
-			
-					
-					if(!scores.containsKey(userId)){
-						scores.put(userId, new ArrayList<Rating>());
-					} 
-					scores.get(userId).add(new Rating(timestamp, scoreValue, itemId));
+
+			if(!scores.containsKey(userId)){
+				scores.put(userId, new ArrayList<>());
+			}
+			scores.get(userId).add(new Rating(timestamp, scoreValue, itemId));
 
 		}
 		reader.close();
