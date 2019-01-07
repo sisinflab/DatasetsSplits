@@ -1,6 +1,15 @@
-FIXED TIMESTAMP SPLITTING
+# FIXED TIMESTAMP SPLITTING
 
-usage:
+## Contacts
+
+   Tommaso Di Noia, tommaso [dot] dinoia [at] poliba [dot] it  
+   
+   Vito Walter Anelli, vitowalter [dot] anelli [at] poliba [dot] it 
+   
+   Joseph Trotta, joseph [dot] trotta [at] poliba [dot] it 
+   
+
+## Usage
 
  -dp,--datasetPath <arg>   Dataset path
  
@@ -12,7 +21,7 @@ usage:
  
  -sp,--splitter <arg>      Name of splitter to use
 
-Example:
+## Example
 
 java -jar temporalSplitting.jar --datasetPath="toys_amazon/ratings_indexed.tsv" --splitPath="targetFolder/" --splitter="TemporalSplitterWithConstraints" --minTrain="15" --minTest="5" --separator="\t"
 
