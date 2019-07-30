@@ -1,0 +1,7 @@
+training data: 479 users, 8892 items, 20369 ratings, sparsity 99.52177
+rating period: 942883200 to 1319760000
+rating period: Thursday 18 November 1999 00:00:00 to Friday 28 October 2011 00:00:00
+test data:     479 users, 4171 items, 8114 ratings, sparsity 99.59387
+rating period: 1319846400 to 1405900800
+rating period: Saturday 29 October 2011 00:00:00 to Monday 21 July 2014 00:00:00
+
